@@ -6,13 +6,18 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import ryanlou.production.tek_chin.auth.AuthenticationService;
 import ryanlou.production.tek_chin.auth.RegisterRequest;
+import ryanlou.production.tek_chin.carousel.Carousel;
+import ryanlou.production.tek_chin.carousel.CarouselRepository;
 import ryanlou.production.tek_chin.post.Post;
 import ryanlou.production.tek_chin.post.PostRepository;
 import ryanlou.production.tek_chin.token.TokenRepository;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 
 import static ryanlou.production.tek_chin.user.Role.ADMIN;
@@ -24,6 +29,9 @@ public class TekChinApplication {
 
     @Autowired
     private  PostRepository postRepository;
+
+    @Autowired
+    private CarouselRepository carouselRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(TekChinApplication.class, args);
@@ -88,6 +96,15 @@ public class TekChinApplication {
             postRepository.save(post1);
             postRepository.save(post2);
             postRepository.save(post3);
+
+            byte[] byteArray = Files.readAllBytes(Paths.get("src/main/resources/static/img.png"));
+
+            var carousel = Carousel.builder()
+                    .enable(true)
+                    .imageData(byteArray)
+                    .build();
+
+            carouselRepository.save(carousel);
         };
     }
 

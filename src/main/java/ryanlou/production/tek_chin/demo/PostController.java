@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(value = "http://localhost:3000" , allowCredentials = "true")
 @RequestMapping("/api/v1/post")
 public class PostController {
 
@@ -47,9 +48,9 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping(value = "/uploadImage/{postId}")
+    @PostMapping(value = "/uploadImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(
-            @PathVariable Integer postId,
+            @RequestParam("postId") Integer postId,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
 
@@ -91,11 +92,13 @@ public class PostController {
         }
     }
 
-    @PostMapping(value ="/update/{postId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value ="/updatePost", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePost(
-            @RequestBody PostRequest request,
+            @RequestParam("title") String title,
+            @RequestParam("paragraph") String paragraph,
+            @RequestParam("enable") Boolean enable,
             @RequestParam("file") MultipartFile file,
-            @PathVariable Integer postId
+            @RequestParam("postId") Integer postId
     ) throws IOException {
         Optional<Post> oldPostOptional = postRepository.findById(postId);
         if (oldPostOptional.isPresent()) {
@@ -106,9 +109,9 @@ public class PostController {
             }
             // Post exists, update its data
             Post newPost = oldPostOptional.get();
-            newPost.setTitle(request.getTitle());
-            newPost.setParagraph(request.getParagraph());
-            newPost.setEnable(request.getEnable());
+            newPost.setTitle(title);
+            newPost.setParagraph(paragraph);
+            newPost.setEnable(enable);
             newPost.setImageData(ImageUtil.compressImage(imageData));
             newPost.setUpdateDate(new Date());
             // Update other fields as needed

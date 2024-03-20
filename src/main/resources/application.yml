@@ -13,8 +13,14 @@
 #        format_sql: true
 #    database: postgresql
 #    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  max-http-request-header-size: 120000000000
 
 spring:
+  servlet:
+    multipart:
+      max-request-size: 350MB
+      max-file-size: 300MB
   datasource:
     url: jdbc:mysql://localhost:3306/tek_chin?serverTimezone=Asia/Taipei&characterEncoding=utf-8
     username: root
