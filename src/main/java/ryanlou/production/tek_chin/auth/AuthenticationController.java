@@ -1,34 +1,42 @@
+
 package ryanlou.production.tek_chin.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
+//@CrossOrigin(value = "http://localhost:3000" , allowCredentials = "true")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-  private final AuthenticationService service;
+  @Autowired
+  private AuthenticationService authenticationService;
 
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(
       @RequestBody RegisterRequest request
   ) {
-    return ResponseEntity.ok(service.register(request));
+    AuthenticationResponse rs = authenticationService.register(request);
+    log.info("register Response: {}",rs);
+    return ResponseEntity.ok(rs);
   }
+
   @PostMapping("/authenticate")
   public ResponseEntity<AuthenticationResponse> authenticate(
       @RequestBody AuthenticationRequest request
   ) {
-    return ResponseEntity.ok(service.authenticate(request));
+    AuthenticationResponse rs = authenticationService.authenticate(request);
+    log.info("authenticate authenticate: {}",rs);
+    return ResponseEntity.ok(rs);
   }
 
   @PostMapping("/refresh-token")
@@ -36,7 +44,7 @@ public class AuthenticationController {
       HttpServletRequest request,
       HttpServletResponse response
   ) throws IOException {
-    service.refreshToken(request, response);
+    authenticationService.refreshToken(request, response);
   }
 
 

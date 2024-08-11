@@ -13,14 +13,11 @@ import ryanlou.production.tek_chin.post.ImageUtil;
 
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(value = "http://localhost:3000" , allowCredentials = "true")
+//@CrossOrigin(value = "http://localhost:3000/" , allowCredentials = "true")
 @RequestMapping("/api/v1/carousel")
 public class CarouselController {
 
@@ -32,14 +29,14 @@ public class CarouselController {
             @RequestParam("enable") Boolean enable,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
-        byte[] imageData = null;
+        byte[] byteArr = new byte[0];
         if (file != null && !file.isEmpty()) {
-            imageData = ImageUtil.compressImage(file.getBytes());
+            byteArr = file.getBytes();
         }
 
         var carousel = Carousel.builder()
                 .enable(enable)
-                .imageData(imageData)
+                .imageData(byteArr)
                 .build();
 
         var result = carouselRepository.save(carousel);
@@ -55,13 +52,13 @@ public class CarouselController {
         Optional<Carousel> oldCarouselOptional = carouselRepository.findById(carouselId);
         if (oldCarouselOptional.isPresent()) {
 
-            byte[] imageData = null;
+            byte[] byteArr = new byte[0];
             if (file != null && !file.isEmpty()) {
-                imageData = ImageUtil.compressImage(file.getBytes());
+                byteArr = file.getBytes();
             }
             // Post exists, update its data
             Carousel newCarousel = oldCarouselOptional.get();
-            newCarousel.setImageData(ImageUtil.compressImage(imageData));
+            newCarousel.setImageData(ImageUtil.compressImage(byteArr));
             // Update other fields as needed
 
             // Save the updated post back to the database
@@ -92,20 +89,14 @@ public class CarouselController {
     @PostMapping(value ="/updateCarousel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateCarousel(
             @RequestParam("enable") Boolean enable,
-            @RequestParam("file") MultipartFile file,
             @RequestParam("carouselId") Integer carouselId
     ) throws IOException {
         Optional<Carousel> oldCarouselOptional = carouselRepository.findById(carouselId);
         if (oldCarouselOptional.isPresent()) {
 
-            byte[] imageData = null;
-            if (file != null && !file.isEmpty()) {
-                imageData = ImageUtil.compressImage(file.getBytes());
-            }
             // Post exists, update its data
             Carousel newCarousel = oldCarouselOptional.get();
             newCarousel.setEnable(enable);
-            newCarousel.setImageData(ImageUtil.compressImage(imageData));
             // Update other fields as needed
 
             // Save the updated post back to the database

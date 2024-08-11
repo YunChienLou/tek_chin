@@ -4,43 +4,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ryanlou.production.tek_chin.post.ImageUtil;
 import ryanlou.production.tek_chin.post.Post;
 import ryanlou.production.tek_chin.post.PostRepository;
-import ryanlou.production.tek_chin.post.PostRequest;
-
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(value = "http://localhost:3000" , allowCredentials = "true")
+//@CrossOrigin(value = "http://localhost:3000/" , allowCredentials = "true")
 @RequestMapping("/api/v1/post")
 public class PostController {
 
     @Autowired
     private PostRepository postRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createPost(
             @RequestParam("title") String title,
             @RequestParam("paragraph") String paragraph,
             @RequestParam("enable") Boolean enable,
-            @RequestParam("file") MultipartFile file
+            @RequestParam(value = "file", required = false) MultipartFile file
     ) throws IOException {
-        byte[] imageData = null;
+        byte[] byteArr = new byte[0];
         if (file != null && !file.isEmpty()) {
-            imageData = ImageUtil.compressImage(file.getBytes());
+            byteArr = file.getBytes();
         }
 
         var post = Post.builder()
                 .title(title)
                 .paragraph(paragraph)
                 .enable(enable)
-                .imageData(imageData)
+                .imageData(byteArr)
                 .updateDate(new Date())
                 .build();
 
@@ -48,6 +47,7 @@ public class PostController {
         return ResponseEntity.ok(result);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "/uploadImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> uploadImage(
             @RequestParam("postId") Integer postId,
@@ -57,13 +57,13 @@ public class PostController {
         Optional<Post> oldPostOptional = postRepository.findById(postId);
         if (oldPostOptional.isPresent()) {
 
-            byte[] imageData = null;
+            byte[] byteArr = new byte[0];
             if (file != null && !file.isEmpty()) {
-                imageData = ImageUtil.compressImage(file.getBytes());
+                byteArr = file.getBytes();
             }
             // Post exists, update its data
             Post newPost = oldPostOptional.get();
-            newPost.setImageData(ImageUtil.compressImage(imageData));
+            newPost.setImageData(byteArr);
             newPost.setUpdateDate(new Date());
             // Update other fields as needed
 
@@ -77,6 +77,7 @@ public class PostController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/delete/{postId}")
     public ResponseEntity<?> deletePost(
             @PathVariable Integer postId
@@ -92,27 +93,28 @@ public class PostController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value ="/updatePost", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updatePost(
             @RequestParam("title") String title,
             @RequestParam("paragraph") String paragraph,
             @RequestParam("enable") Boolean enable,
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "file", required = false) MultipartFile file,
             @RequestParam("postId") Integer postId
     ) throws IOException {
         Optional<Post> oldPostOptional = postRepository.findById(postId);
         if (oldPostOptional.isPresent()) {
 
-            byte[] imageData = null;
+            byte[] byteArr = new byte[0];
             if (file != null && !file.isEmpty()) {
-                imageData = ImageUtil.compressImage(file.getBytes());
+                byteArr = file.getBytes();
             }
             // Post exists, update its data
             Post newPost = oldPostOptional.get();
             newPost.setTitle(title);
             newPost.setParagraph(paragraph);
             newPost.setEnable(enable);
-            newPost.setImageData(ImageUtil.compressImage(imageData));
+            newPost.setImageData(byteArr);
             newPost.setUpdateDate(new Date());
             // Update other fields as needed
 
@@ -138,6 +140,7 @@ public class PostController {
         return ResponseEntity.ok().body(posts);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getPost/{postId}")
     public ResponseEntity<?> getPost(@PathVariable Integer postId){
         Optional<Post> post = postRepository.findById(postId);
