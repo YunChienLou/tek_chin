@@ -23,7 +23,7 @@ import java.util.Date;
 import static ryanlou.production.tek_chin.user.Role.ADMIN;
 import static ryanlou.production.tek_chin.user.Role.MANAGER;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "ryanlou.production.tek_chin")
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class TekChinApplication {
 
