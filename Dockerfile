@@ -5,10 +5,10 @@ FROM openjdk:17-jdk
 WORKDIR /app
 
 # 複製 JAR 文件到容器中
-COPY api.jar /app/api.jar
+COPY build/api.jar /app/api.jar
 
 # 暴露 API 埠
 EXPOSE 8080
 
 # 啟動 JAR 文件
-CMD ["java", "-jar", "your-api.jar"]
+CMD ["java", "-jar", "api.jar"]
