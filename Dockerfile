@@ -5,7 +5,7 @@ FROM openjdk:17-jdk
 WORKDIR /app
 
 # 複製 JAR 文件到容器中
-COPY build/api.jar /app/api.jar
+COPY /out/artifacts/tek_chin_jar/tek_chin.jar  /app/api.jar
 
 # 暴露 API 埠
 EXPOSE 8080
