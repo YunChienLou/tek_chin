@@ -11,4 +11,4 @@ COPY /out/artifacts/tek_chin_jar/tek_chin.jar  /app/api.jar
 EXPOSE 8080
 
 # 啟動 JAR 文件
-CMD ["java", "-Dspring.profiles.active=production", "-jar", "api.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=production", "-jar", "api.jar"]
