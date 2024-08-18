@@ -5,10 +5,10 @@ FROM openjdk:17-jdk
 WORKDIR /app
 
 # 複製 JAR 文件到容器中
-COPY /out/artifacts/tek_chin_jar/tek_chin.jar  /app/api.jar
+COPY target/tek_chin-0.0.1-SNAPSHOT.jar  /app/api.jar
 
 # 暴露 API 埠
 EXPOSE 8080
 
 # 啟動 JAR 文件
-ENTRYPOINT ["java", "-Dspring.profiles.active=production", "-jar", "api.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=prod", "-jar", "api.jar"]
