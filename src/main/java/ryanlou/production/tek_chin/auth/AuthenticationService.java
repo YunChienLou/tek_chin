@@ -1,6 +1,7 @@
 package ryanlou.production.tek_chin.auth;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
@@ -27,11 +28,20 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-  private final UserRepository repository;
-  private final TokenRepository tokenRepository;
+
+  @Autowired
+  private UserRepository repository;
+
+  @Autowired
+  private TokenRepository tokenRepository;
+
   private final PasswordEncoder passwordEncoder;
-  private final JwtService jwtService;
-  private final AuthenticationManager authenticationManager;
+
+  @Autowired
+  private  JwtService jwtService;
+
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
     var user = User.builder()

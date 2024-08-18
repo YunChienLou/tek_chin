@@ -40,9 +40,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Value("${application.security.whiteListUrls}")
   private String[] whiteListUrls;
 
-  private final JwtService jwtService;
-  private final UserDetailsService userDetailsService;
-  private final TokenRepository tokenRepository;
+  @Autowired
+  private  JwtService jwtService;
+  @Autowired
+  private  UserDetailsService userDetailsService;
+  @Autowired
+  private  TokenRepository tokenRepository;
 
   @Autowired
   @Qualifier("handlerExceptionResolver")

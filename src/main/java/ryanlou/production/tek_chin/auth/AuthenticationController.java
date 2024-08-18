@@ -48,4 +48,7 @@ public class AuthenticationController {
   }
 
 
+  public void setAuthenticationService(AuthenticationService authenticationService) {
+    this.authenticationService = authenticationService;
+  }
 }

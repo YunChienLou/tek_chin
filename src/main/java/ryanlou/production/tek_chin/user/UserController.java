@@ -1,6 +1,7 @@
 package ryanlou.production.tek_chin.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,7 +15,8 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService service;
+    @Autowired
+    private  UserService service;
 
     @PatchMapping
     public ResponseEntity<?> changePassword(

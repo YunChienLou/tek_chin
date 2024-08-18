@@ -1,7 +1,7 @@
 package ryanlou.production.tek_chin.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ryanlou.production.tek_chin.auditing.ApplicationAuditAware;
-import ryanlou.production.tek_chin.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +14,18 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ryanlou.production.tek_chin.user.UserRepository;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-  private final UserRepository repository;
+  @Autowired
+  private UserRepository userRepository;
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> repository.findByEmail(username)
+    return username -> userRepository.findByEmail(username)
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 

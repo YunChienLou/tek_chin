@@ -22,7 +22,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
 
-  private final TokenRepository tokenRepository;
+  @Autowired
+  private TokenRepository tokenRepository;
 
   @Autowired
   @Qualifier("handlerExceptionResolver")

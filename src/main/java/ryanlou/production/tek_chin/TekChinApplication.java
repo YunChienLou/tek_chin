@@ -1,37 +1,16 @@
 package ryanlou.production.tek_chin;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import ryanlou.production.tek_chin.auth.AuthenticationService;
-import ryanlou.production.tek_chin.auth.RegisterRequest;
-import ryanlou.production.tek_chin.carousel.Carousel;
-import ryanlou.production.tek_chin.carousel.CarouselRepository;
-import ryanlou.production.tek_chin.post.Post;
-import ryanlou.production.tek_chin.post.PostRepository;
-import ryanlou.production.tek_chin.token.TokenRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Date;
-
-import static ryanlou.production.tek_chin.user.Role.ADMIN;
-import static ryanlou.production.tek_chin.user.Role.MANAGER;
-
+@EntityScan(basePackages = "ryanlou.production.tek_chin")
+@EnableJpaRepositories(basePackages = "ryanlou.production.tek_chin")
 @SpringBootApplication(scanBasePackages = "ryanlou.production.tek_chin")
-@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 public class TekChinApplication {
-
-    @Autowired
-    private  PostRepository postRepository;
-
-    @Autowired
-    private CarouselRepository carouselRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(TekChinApplication.class, args);

@@ -1,6 +1,7 @@
 package ryanlou.production.tek_chin.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,10 @@ import java.security.Principal;
 public class UserService {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository repository;
+
+    @Autowired
+    private UserRepository repository;
+
     public void changePassword(ChangePasswordRequest request, Principal connectedUser) {
 
         var user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
