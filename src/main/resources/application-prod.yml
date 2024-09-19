@@ -1,10 +1,19 @@
+server:
+  port: 8443  # Port for HTTPS
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: qpal9865
+    key-alias: tomcat
+
 spring:
   servlet:
     multipart:
       max-request-size: 3MB
       max-file-size: 3MB
   datasource:
-    url: jdbc:mysql://mysql:3306/tek_chin?serverTimezone=Asia/Taipei&characterEncoding=utf-8
+    url: jdbc:mysql://pub-tek-0908.cho60u6i0b7g.ap-northeast-1.rds.amazonaws.com/tek_chin?serverTimezone=Asia/Taipei&characterEncoding=utf-8
     username: root
     password: springboot
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -35,7 +44,17 @@ application:
       /configuration/security,
       /swagger-ui/**,
       /webjars/**,
-      /swagger-ui.html
+      /swagger-ui.html,
+      /,
+      /News,
+      /About,
+      /Contact,
+      /Login,
+      /admin/**,
+      /_nuxt/**,
+      /login,
+      /favicon.ico,
+      /car.ico
     jwt:
       secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
       expiration: 86400000 # 1 day

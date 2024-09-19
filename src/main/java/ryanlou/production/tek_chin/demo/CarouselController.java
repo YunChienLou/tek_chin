@@ -1,6 +1,7 @@
 package ryanlou.production.tek_chin.demo;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,8 +17,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 //@CrossOrigin(value = "http://localhost:3000/" , allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/api/v1/carousel")
 public class CarouselController {
 
@@ -86,28 +89,36 @@ public class CarouselController {
         }
     }
 
-    @PostMapping(value ="/updateCarousel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/updateCarousel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateCarousel(
             @RequestParam("enable") Boolean enable,
             @RequestParam("carouselId") Integer carouselId
-    ) throws IOException {
-        Optional<Carousel> oldCarouselOptional = carouselRepository.findById(carouselId);
-        if (oldCarouselOptional.isPresent()) {
+    ) {
+        try {
+            Optional<Carousel> oldCarouselOptional = carouselRepository.findById(carouselId);
+            if (oldCarouselOptional.isPresent()) {
 
-            // Post exists, update its data
-            Carousel newCarousel = oldCarouselOptional.get();
-            newCarousel.setEnable(enable);
-            // Update other fields as needed
+                // Post exists, update its data
+                Carousel newCarousel = oldCarouselOptional.get();
+                newCarousel.setEnable(enable);
+                // Update other fields as needed
 
-            // Save the updated post back to the database
-            carouselRepository.save(newCarousel);
+                // Save the updated post back to the database
+                carouselRepository.save(newCarousel);
 
-            return ResponseEntity.ok().body(newCarousel);
-        } else {
-            // Post not found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Carousel not found");
+                return ResponseEntity.ok().body(newCarousel);
+            } else {
+                // Post not found
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Carousel not found");
+            }
+        } catch (Exception e) {
+            // Handle any unexpected exceptions
+            log.info("An error occurred while updating the carousel: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while updating the carousel: " + e.getMessage());
         }
     }
+
     @GetMapping("/query")
     public ResponseEntity<?> queryCarousel(
             //查詢條件 Filtering
